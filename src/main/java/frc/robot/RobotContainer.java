@@ -82,9 +82,7 @@ private void configureButtonBindings() {
 
     // Bind the right bumper on the driver controller to spin up and launch fuel
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(ballSubsystem.spinUpCommand().withTimeout(SPIN_UP_SECONDS)
-            .andThen(ballSubsystem.launchCommand())
-            .finallyDo(() -> ballSubsystem.stop()));
+        .whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.launch(), () -> ballSubsystem.stop()));
 
     // Bind the A button on the driver controller to eject fuel
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
