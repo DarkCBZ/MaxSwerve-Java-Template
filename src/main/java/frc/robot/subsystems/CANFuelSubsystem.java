@@ -13,59 +13,64 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.FuelConstants.*;
 
 public class CANFuelSubsystem extends SubsystemBase {
-  private final SparkMax feederRoller;
-  private final SparkMax intakeLauncherRoller;
+  private final SparkMax backRoller;
+  private final SparkMax frontRoller;
+  private final SparkMax launcherRoller;
   private final RelativeEncoder shooterEncoder;
 
   /** Creates a new CANBallSubsystem. */
   public CANFuelSubsystem() {
-    intakeLauncherRoller = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushed);
-    feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
+    backRoller = new SparkMax(BACK_INTAKE_MOTOR_ID, MotorType.kBrushed);
+    frontRoller = new SparkMax(FRONT_INTAKE_MOTOR_ID, MotorType.kBrushed);
+    launcherRoller = new SparkMax(LAUNCHER_MOTOR_ID, MotorType.kBrushed);
 
-    shooterEncoder = intakeLauncherRoller.getEncoder();
+    shooterEncoder = launcherRoller.getEncoder();
 
-    SmartDashboard.putNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Intaking intake roller value", INTAKING_INTAKE_VOLTAGE);
-    SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
-    SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE);
+    SmartDashboard.putNumber("Intaking Back", INTAKING_BACK_VOLTAGE);
+    SmartDashboard.putNumber("Intaking Front", INTAKING_FRONT_VOLTAGE);
+    SmartDashboard.putNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE);
+    SmartDashboard.putNumber("Launching launcher", LAUNCHING_LAUNCHER_VOLTAGE);
+    SmartDashboard.putNumber("Spin up", SPIN_UP_VOLTAGE);
 
     SparkMaxConfig feederConfig = new SparkMaxConfig();
-    feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
-    feederRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    feederConfig.smartCurrentLimit(CURRENT_LIMIT);
+    backRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    frontRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
     launcherConfig.inverted(true);
-    launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
-    intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    launcherConfig.smartCurrentLimit(CURRENT_LIMIT);
+    launcherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void intake() {
-    feederRoller.setVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
-    intakeLauncherRoller.setVoltage(SmartDashboard.getNumber("Intaking intake roller value", INTAKING_INTAKE_VOLTAGE));
+    backRoller.setVoltage(SmartDashboard.getNumber("Intaking Back", INTAKING_BACK_VOLTAGE));
+    frontRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
+    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
   }
 
   public void eject() {
-    feederRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
-    intakeLauncherRoller.setVoltage(
-        -1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VOLTAGE));
+    backRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking Back", INTAKING_BACK_VOLTAGE));
+    frontRoller.setVoltage(SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
+    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
   }
 
   public void launch() {
-    feederRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
-    intakeLauncherRoller.setVoltage(
-        SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE));
+    backRoller.setVoltage(-1 * SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
+    frontRoller.setVoltage(-1 * SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
+    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching launcher", LAUNCHING_LAUNCHER_VOLTAGE));
   }
 
   public void stop() {
-    feederRoller.set(0);
-    intakeLauncherRoller.set(0);
+    backRoller.set(0);
+    frontRoller.set(0);
+    launcherRoller.set(0);
   }
 
   public void spinUp() {
-    feederRoller.setVoltage(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE));
-    intakeLauncherRoller.setVoltage(
-        SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE));
+    backRoller.setVoltage(SmartDashboard.getNumber("Spin up", SPIN_UP_VOLTAGE));
+    frontRoller.setVoltage(SmartDashboard.getNumber("Spin up", SPIN_UP_VOLTAGE));
+    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching launcher", LAUNCHING_LAUNCHER_VOLTAGE));
   }
 
   public double getShooterRPM() {
