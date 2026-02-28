@@ -20,9 +20,9 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   /** Creates a new CANBallSubsystem. */
   public CANFuelSubsystem() {
-    backRoller = new SparkMax(BACK_INTAKE_MOTOR_ID, MotorType.kBrushed);
-    frontRoller = new SparkMax(FRONT_INTAKE_MOTOR_ID, MotorType.kBrushed);
-    launcherRoller = new SparkMax(LAUNCHER_MOTOR_ID, MotorType.kBrushed);
+    backRoller = new SparkMax(BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    frontRoller = new SparkMax(FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    launcherRoller = new SparkMax(LAUNCHER_MOTOR_ID, MotorType.kBrushless);
 
     shooterEncoder = launcherRoller.getEncoder();
 
@@ -45,14 +45,12 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   public void intake() {
     backRoller.setVoltage(SmartDashboard.getNumber("Intaking Back", INTAKING_BACK_VOLTAGE));
-    frontRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
-    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
+    frontRoller.setVoltage(SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
   }
 
   public void eject() {
     backRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking Back", INTAKING_BACK_VOLTAGE));
-    frontRoller.setVoltage(SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
-    launcherRoller.setVoltage(SmartDashboard.getNumber("Launching Intake", LAUNCHING_INTAKING_VOLTAGE));
+    frontRoller.setVoltage(-1 * SmartDashboard.getNumber("Intaking Front", INTAKING_FRONT_VOLTAGE));
   }
 
   public void launch() {
